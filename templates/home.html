@@ -1,18 +1,18 @@
-{% extends "base.html" %}
-{% block content%}
+{% extends "base.html" %} {% block content%}
 
-<div class="posts">
 
-    {% for data in datas %}
-    <div>
-        <h3>{{data.user}}</h3>
-        <article>
-            {{data.body}}
-        </article>
-        <span>Author: {{data.author}}  date:{{data.date}}</span>
+{% for post in posts %}
+<article class=" rounded-md media content-section">
+    <div class="pl-4 bg-white">
+        <div class="border-b-2">
+            <a class="mr-2 text-sky-500" href="#">{{ post.author }}</a>
+            <small class="text-muted">{{ post.date_posted }}</small>
+            <!-- <hr /> -->
+        </div>
+        <h2><a class="font-medium text-3xl" href="#">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
     </div>
-    {% endfor %}
-</div>
+</article>
+{% endfor %}
+
 {%endblock content%}
-
-

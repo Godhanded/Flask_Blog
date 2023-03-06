@@ -1,4 +1,54 @@
 {%extends "base.html"%}
 {%block content%}
-<h1>About</h1>
+<div>
+    <form method="POST" action="/login">
+        {{form.hidden_tag()}}
+        <fieldset>
+            <legend class="text-lg text-bold">Log In</legend>
+           
+            <div>
+                {{form.email.label(class="text-sm")}}
+                {%if form.email.errors%}
+                {{form.email(class="w-full border-rose-600 border-2 h-8 rounded" )}}
+                <div class="text-rose-600 text-sm" >
+                    {% for error in form.email.errors %}
+                        <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.email(class="w-full border h-8 rounded")}}
+            {%endif%}
+            </div>
+            <div>
+                {{form.password.label(class="text-sm")}}
+                {%if form.password.errors%}
+                {{form.password(class="w-full border-rose-600 border-2 h-8 rounded")}}
+                <div class="text-rose-600 text-sm" >
+                    {% for error in form.password.errors %}
+                        <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.password(class="w-full border  h-8 rounded")}}
+            {%endif%}
+            </div>
+            <div>
+                {{form.remember(class="")}}
+                {{form.remember.label(class="text-sm italic")}}
+            </div>
+        </fieldset>
+        <div>
+            {{form.submit(class='rounded-full bg-sky-700 text-base md:text-sm text-white hover:cursor-pointer p-auto py-2 w-1/5 mt-2')}}
+            <small class="text-sm ml-2">
+                <a href="#">Forgot password?</a>
+            </small>
+        </div>
+        
+    </form>
+</div>
+<div>
+    <small>
+        Dont Have An Account? <a class="ml-2 text-sky-700" href="{{url_for('register')}}">Sign Up</a>
+    </small>
+</div>
 {%endblock content%}

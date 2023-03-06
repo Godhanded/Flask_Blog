@@ -1,6 +1,6 @@
-from flask import Flask,render_template,url_for,redirect
+from flask import Flask,render_template,url_for,redirect,flash
 from forms import RegistrationForm,LoginForm
-import json
+
 
 app=Flask(__name__)
 app.config['SECRET_KEY']='54321'
@@ -29,14 +29,24 @@ def home():
 def about():
     return render_template("about.html", title="About")
 
-@app.route("/register")
+@app.route("/register",methods=['GET','POST'])
 def register():
     form=RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!','bg-green-400')
+        return redirect(url_for('home'))
+    
     return render_template("register.html", title="Register",form=form)
 
-@app.route("/login")
+@app.route("/login",methods=['GET','POST'])
 def login():
     form=LoginForm()
+    if form.validate_on_submit():
+        if form.email.data=='foo@gmail.com' and form.password.data=='123':
+            flash('You have been logged in!','bg-green-300')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessfull. Check username and password','bg-rose-400')
     return render_template("login.html", title="login",form=form)
 
 

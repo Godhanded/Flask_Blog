@@ -18,22 +18,31 @@
         <nav>
             <div class=" flex flex-row items-center justify-around py-4 bg-slate-700">
                 <div>
-                    <a class="font-bold mr-4 text-slate-200" href="/">Flask Blog</a>
-                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="/">Home</a>
-                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="/about">About</a>
+                    <a class="font-bold mr-4 text-slate-200" href="{{url_for('home')}}">Flask Blog</a>
+                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('home')}}">Home</a>
+                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('about')}}">About</a>
                 </div>
                 <!-- Navbar Right Side -->
-                <div class="navbar-nav">
-                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="/login">Login</a>
-                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="/register">Register</a>
+                <div>
+                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('login')}}">Login</a>
+                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('register')}}">Register</a>
                 </div>
 
             </div>
         </nav>
         </header>
-        <main class=" bg-slate-50 w-full mt-4">
+        <main class=" bg-slate-50 w-full mt-4 h-screen">
         <div class="flex flex-row justify-around ">
             <div class="p-4 flex -mr-10 flex-col gap-2 w-2/5">
+                {% with messages=get_flashed_messages(with_categories=true) %}
+                    {%if messages%}
+                    {%for category, message in messages%}
+                    <div class=" text-sm pl-5 py-2 {{category}} ">
+                        {{message}}
+                    </div>
+                    {%endfor%}
+                    {%endif%}
+                {%endwith%}
                 {% block content%}
                 {% endblock content %}
             </div>

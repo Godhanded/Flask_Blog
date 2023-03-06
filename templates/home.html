@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content%}
+
+<div class="posts">
+
+    {% for data in datas %}
+    <div>
+        <h3>{{data.user}}</h3>
+        <article>
+            {{data.body}}
+        </article>
+        <span>Author: {{data.author}}  date:{{data.date}}</span>
+    </div>
+    {% endfor %}
+</div>
+{%endblock content%}
+
+

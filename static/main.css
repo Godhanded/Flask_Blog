@@ -1,0 +1,34 @@
+*{
+    box-sizing: border-box;
+
+}
+
+body{
+    height: 100%;
+}
+.posts{
+    display: flex;
+    justify-content: center;
+
+    margin:auto;
+    flex-direction: column;
+}
+
+.posts>div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.post>div>div{
+    margin: auto;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 3px;
+    border-color: pink;
+    box-shadow: 5px;
+}
+article{
+    max-width: 50%;
+}

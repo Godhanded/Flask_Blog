@@ -1,0 +1,35 @@
+{%extends "base.html"%}
+{%block content%}
+    <div>
+        <form method="post" action="">
+            {{form.hidden_tag()}}
+            <fieldset>
+                <legend>Join Today</legend>
+                <div>
+                    {{form.username.label(class="")}}
+                    {{form.username(class="")}}
+                </div>
+                <div>
+                    {{form.email.label(class="")}}
+                    {{form.email(class="")}}
+                </div>
+                <div>
+                    {{form.password.label(class="")}}
+                    {{form.password(class="")}}
+                </div>
+                <div>
+                    {{form.confirm_password.label(class="")}}
+                    {{form.confirm_password(class="")}}
+                </div>
+            </fieldset>
+            <div>
+                {{form.submit(class='')}}
+            </div>
+        </form>
+    </div>
+    <div>
+        <small>
+            Already have an Account? <a class="ml-2" href="{{url_for('login')}}">Sign In</a>
+        </small>
+    </div>
+{%endblock content%}

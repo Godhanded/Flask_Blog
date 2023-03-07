@@ -1,16 +1,3 @@
-from flask import Flask,render_template,url_for,redirect,flash
-from flask_sqlalchemy import SQLAlchemy
-from app.forms import RegistrationForm,LoginForm
-from app.models import User,Post
-
-
-
-app=Flask(__name__)
-app.config['SECRET_KEY']='54321'
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db'
-db=SQLAlchemy(app)
-
-
 posts = [
     {
         'author': 'Corey Schafer',
@@ -55,6 +42,3 @@ def login():
             flash('Login Unsuccessfull. Check username and password','bg-rose-400')
     return render_template("login.html", title="login",form=form)
 
-
-if (__name__== "__main__"):
-    app.run(debug=True)

@@ -1,3 +1,8 @@
+from flask import render_template,redirect,url_for,flash
+from flask_blog import app 
+from flask_blog.models import User,Post
+from flask_blog.forms import RegistrationForm,LoginForm
+
 posts = [
     {
         'author': 'Corey Schafer',

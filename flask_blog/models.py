@@ -1,4 +1,4 @@
-from app import db
+from flask_blog import db
 from datetime import datetime
 
 class User(db.Model):

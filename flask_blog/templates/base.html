@@ -24,8 +24,12 @@
                 </div>
                 <!-- Navbar Right Side -->
                 <div>
+                    {%if current_user.is_authenticated%}
+                    <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('logout')}}">Logout</a>
+                    {%else%}
                     <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('login')}}">Login</a>
                     <a class="font-medium px-3 py-2 text-slate-200 rounded-lg hover:bg-slate-100 hover:text-black" href="{{url_for('register')}}">Register</a>
+                    {%endif%}
                 </div>
 
             </div>

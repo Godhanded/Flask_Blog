@@ -1,7 +1,8 @@
 from flask import render_template, redirect, url_for, flash
-from flask_blog import app,bcrypt,db
+from flask_blog import app,bcrypt,db,query_one_filtered,query_all_filtered
 from flask_blog.models import User, Post
 from flask_blog.forms import RegistrationForm, LoginForm
+from flask_login import login_user,current_user,logout_user
 
 
 posts = [
@@ -33,24 +34,42 @@ def about():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password= bcrypt.get_password_hash(form.password.data).decode('utf-8')
-        user=User(username=form.username.data,password=hashed_password)
-        flash(f"Account created for {form.username.data}!", "bg-green-400")
-        return redirect(url_for("home"))
-
+        hashed_password= bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user=User(username=form.username.data,password=hashed_password,email=form.email.data)
+        user.insert()
+        flash(f"Account created for {form.username.data}. Login Here!", "bg-green-400")
+        return redirect(url_for("login"))
+    print(form.form_errors)
     return render_template("register.html", title="Register", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
+        user= query_one_filtered(User,email=form.email.data)
 
-        if form.email.data == "foo@gmail.com" and form.password.data == "123":
-            flash("You have been logged in!", "bg-green-300")
-            return redirect(url_for("home"))
+        if user and bcrypt.check_password_hash(user.password,form.password.data):
+            login_user(user,remember=form.remember.data)
+            return redirect(url_for('home'))
         else:
-            flash("Login Unsuccessfull. Check username and password", "bg-rose-400")
-    return render_template("login.html", title="login", form=form)
+            flash("Login Unsuccessfull. Check email and password", "bg-rose-400")
+    return render_template("login.html", title="Login", form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+@app.route('/account')
+def account():
+    
+    return render_template('account.html',title='Account')

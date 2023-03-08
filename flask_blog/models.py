@@ -10,8 +10,25 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     posts = db.Relationship("Post", backref="author", lazy=True)
 
+    def __init__(self,username,email,image_file,password):
+        self.username=username
+        self.email=email
+        self.image_file=image_file
+        self.password=password
+
     def __repr__(self):
         return f"User('{self.username}','{self.email}','{self.image_file}')"
+    
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Post(db.Model):
@@ -21,5 +38,22 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
+    def __init__(self,title,date_posted,content,user_id) -> None:
+        self.title=title
+        self.date_posted=date_posted
+        self.content=content
+        self.user_id=user_id
+
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()

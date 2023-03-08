@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash
-from flask_blog import app,bcrypt,db,query_one_filtered,query_all_filtered
+from flask_blog import app, bcrypt, db, query_one_filtered, query_all_filtered
 from flask_blog.models import User, Post
 from flask_blog.forms import RegistrationForm, LoginForm
-from flask_login import login_user,current_user,logout_user
+from flask_login import login_user, current_user, logout_user
 
 
 posts = [
@@ -35,11 +35,15 @@ def about():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for("home"))
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password= bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user=User(username=form.username.data,password=hashed_password,email=form.email.data)
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
+            "utf-8"
+        )
+        user = User(
+            username=form.username.data, password=hashed_password, email=form.email.data
+        )
         user.insert()
         flash(f"Account created for {form.username.data}. Login Here!", "bg-green-400")
         return redirect(url_for("login"))
@@ -50,26 +54,25 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit():
-        user= query_one_filtered(User,email=form.email.data)
+        user = query_one_filtered(User, email=form.email.data)
 
-        if user and bcrypt.check_password_hash(user.password,form.password.data):
-            login_user(user,remember=form.remember.data)
-            return redirect(url_for('home'))
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            return redirect(url_for("home"))
         else:
             flash("Login Unsuccessfull. Check email and password", "bg-rose-400")
     return render_template("login.html", title="Login", form=form)
 
 
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for("home"))
 
 
-@app.route('/account')
+@app.route("/account")
 def account():
-    
-    return render_template('account.html',title='Account')
+    return render_template("account.html", title="Account")

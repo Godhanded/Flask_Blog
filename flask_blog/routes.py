@@ -48,9 +48,8 @@ def register():
             username=form.username.data, password=hashed_password, email=form.email.data
         )
         user.insert()
-        flash(f"Account created for {form.username.data}. Login Here!", "bg-green-400")
+        flash(f"Account created for {form.username.data}. Login Here!", "success")
         return redirect(url_for("login"))
-    print(form.form_errors)
     return render_template("register.html", title="Register", form=form)
 
 
@@ -67,7 +66,7 @@ def login():
             next_page = request.args.get("next")
             return redirect(next_page) if next_page else redirect(url_for("home"))
         else:
-            flash("Login Unsuccessfull. Check email and password", "bg-rose-400")
+            flash("Login Unsuccessfull. Check email and password", "fail")
     return render_template("login.html", title="Login", form=form)
 
 
@@ -105,7 +104,7 @@ def account():
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.update()
-        flash("Your Account has been updated!", "bg-green-500 italic")
+        flash("Your Account has been updated!", "success")
         return redirect(url_for("account"))
     elif request.method == "GET":
         form.username.data = current_user.username

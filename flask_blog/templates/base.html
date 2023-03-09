@@ -48,7 +48,7 @@
                 {% with messages=get_flashed_messages(with_categories=true) %}
                 {%if messages%}
                 {%for category, message in messages%}
-                <div class=" text-sm pl-5 py-2 {{category}} ">
+                <div class=" text-sm pl-5 py-2 {% if category=='success'%} bg-green-300 italic rounded text-sm {%else%} bg-rose-300 italic rounded text-sm {%endif%} ">
                     {{message}}
                 </div>
                 {%endfor%}

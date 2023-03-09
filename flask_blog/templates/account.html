@@ -1,4 +1,64 @@
 {%extends "base.html"%}
 {%block content%}
-<h1>{{current_user.username}}</h1>
+<div class="bg-white rounded shadow-md p-2">
+    <div class="flex flex-row gap-5 ">
+        <img class="rounded-full h-[5.5rem] w-[5.5rem]" src="{{image_file}}">
+        <div class="media-body">
+            <h2 class="text-bold text-3xl">{{current_user.username}}</h2>
+            <p class="text-sm text-slate-500">{{current_user.email}}</p>
+        </div>
+    </div>
+    <!-- FORM HERE -->
+    <div class="m-2">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{form.hidden_tag()}}
+            <fieldset>
+                <legend class="text-lg text-bold">Account Info</legend>
+                <div class="m-1">
+                    {{form.username.label(class="text-sm")}}
+
+                    {%if form.username.errors%}
+                    {{form.username(class="w-full border-rose-600 border-2 h-8 rounded")}}
+                    <div class="text-rose-600 text-sm">
+                        {% for error in form.username.errors %}
+                        <span>{{error}}</span>
+                        {%endfor%}
+                    </div>
+                    {%else%}
+                    {{form.username(class="w-full border h-8 rounded")}}
+                    {%endif%}
+
+
+                </div>
+                <div class="m-1">
+                    {{form.email.label(class="text-sm")}}
+                    {%if form.email.errors%}
+                    {{form.email(class="w-full border-rose-600 border-2 h-8 rounded" )}}
+                    <div class="text-rose-600 text-sm">
+                        {% for error in form.email.errors %}
+                        <span>{{error}}</span>
+                        {%endfor%}
+                    </div>
+                    {%else%}
+                    {{form.email(class="w-full border h-8 rounded")}}
+                    {%endif%}
+                </div>
+                <div class="m-2 flex flex-col">
+                    {{form.picture.label(class="text-sm")}}
+                    {{form.picture()}}
+                    {%if form.picture.errors%}
+                    {% for error in form.picture.errors %}
+                    <span class="text-rose-600 text-sm">{{error}}</span><br />
+                    {%endfor%}
+                    {%endif%}
+                </div>
+            </fieldset>
+            <div>
+                {{form.submit(class='rounded-full bg-sky-700 text-base md:text-sm text-white hover:cursor-pointer p-auto
+                py-2 w-1/5 mt-2')}}
+            </div>
+        </form>
+    </div>
+
+</div>
 {%endblock content%}

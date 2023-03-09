@@ -2,7 +2,7 @@ import secrets
 import os
 from PIL import Image
 from flask import render_template, redirect, url_for, flash, request, abort
-from flask_blog import app, bcrypt, db, query_one_filtered, query_all_filtered,query_paginated
+from flask_blog import app, bcrypt, db, query_one_filtered, query_paginate_filtered,query_paginated
 from flask_blog.models import User, Post
 from flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flask_login import login_user, current_user, logout_user, login_required
@@ -160,3 +160,13 @@ def delete_post(post_id):
     post.delete()
     flash("Your post has been deleted", "success")
     return redirect(url_for("home"))
+
+
+@app.route("/user/<string:username>")
+def user_posts(username):
+    page=request.args.get('page',1,type=int)
+    user=query_one_filtered(User,username=username)
+    if not user:
+        abort(404)
+    posts = query_paginate_filtered(Post,page,author=user)
+    return render_template("user_posts.html", posts=posts,title=username,user=user)

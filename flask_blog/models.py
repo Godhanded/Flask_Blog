@@ -44,11 +44,10 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
-    def __init__(self, title, date_posted, content, user_id) -> None:
+    def __init__(self, title, content,author):
         self.title = title
-        self.date_posted = date_posted
         self.content = content
-        self.user_id = user_id
+        self.author = author
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"

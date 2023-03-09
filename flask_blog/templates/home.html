@@ -2,11 +2,12 @@
 
 
 {% for post in posts %}
-<article class=" rounded-md media content-section shadow-md">
-    <div class="pl-4 bg-white">
-        <div class="border-b-2">
-            <a class="mr-2 text-sky-500" href="#">{{ post.author }}</a>
-            <small class="text-muted">{{ post.date_posted }}</small>
+<article class=" rounded-md media content-section shadow-md p-2 flex flex-row bg-white">
+    <img class="rounded-full h-[3.5rem] w-[3.5rem]" src="{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
+    <div class="pl-2 ">
+        <div class="border-b-2 w-[20rem]">
+            <a class="mr-2 text-sky-500" href="#">{{ post.author.username }}</a>
+            <small class="text-slate-500">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             <!-- <hr /> -->
         </div>
         <h2><a class="font-medium text-3xl" href="#">{{ post.title }}</a></h2>

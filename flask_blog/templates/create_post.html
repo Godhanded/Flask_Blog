@@ -1,0 +1,46 @@
+{%extends "base.html"%}
+{%block content%}
+
+<div>
+    <form method="POST" action="">
+        {{form.hidden_tag()}}
+        <fieldset>
+            <legend class="text-lg text-bold">New Post</legend>
+
+            <div>
+                {{form.title.label(class="text-sm")}}
+                {%if form.title.errors%}
+                {{form.title(class="w-full border-rose-600 border-2 h-8 rounded" )}}
+                <div class="text-rose-600 text-sm">
+                    {% for error in form.title.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.title(class="w-full border h-8 rounded")}}
+                {%endif%}
+            </div>
+            <div>
+                {{form.content.label(class="text-sm")}}
+                {%if form.content.errors%}
+                {{form.content(class="w-full border-rose-600 border-2 h-8 rounded")}}
+                <div class="text-rose-600 text-sm">
+                    {% for error in form.content.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.content(class="w-full border h-8 rounded")}}
+                {%endif%}
+            </div>
+            
+        </fieldset>
+        <div>
+            {{form.submit(class='rounded-full bg-sky-700 text-base md:text-sm text-white hover:cursor-pointer p-auto
+            py-2 w-1/5 mt-2')}}
+        </div>
+
+    </form>
+</div>
+
+{%endblock content%}

@@ -17,7 +17,11 @@
 <section class="flex flex-wrap gap-1">
 {%for page_num in posts.iter_pages(left_edge=1,right_edge=1, left_current=1,right_current=2)%}
     {%if page_num%}
+        {%if posts.page==page_num%}
+        <a class=" text-sm border-white border p-2 inline bg-sky-300 text-white" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+        {%else%}
         <a class=" text-sm border-sky-300 border text-sky-400 p-2 inline hover:bg-sky-300 hover:text-white" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+        {%endif%}
     {%else%}
         ...
     {%endif%}

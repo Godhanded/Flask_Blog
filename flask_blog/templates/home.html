@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content%}
 
 
-{% for post in posts %}
+{% for post in posts.items %}
 <article class=" rounded-md media content-section shadow-md p-2 flex flex-row bg-white">
     <img class="rounded-full h-[3.5rem] w-[3.5rem]" src="{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
     <div class="pl-2 ">
@@ -14,6 +14,14 @@
         <p class="article-content">{{ post.content }}</p>
     </div>
 </article>
+<section class="flex flex-wrap gap-1">
+{%for page_num in posts.iter_pages(left_edge=1,right_edge=1, left_current=1,right_current=2)%}
+    {%if page_num%}
+        <a class=" text-sm border-sky-300 border text-sky-400 p-2 inline hover:bg-sky-300 hover:text-white" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+    {%else%}
+        ...
+    {%endif%}
+{%endfor%}
 {% endfor %}
-
+</section>
 {%endblock content%}

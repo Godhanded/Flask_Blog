@@ -28,5 +28,8 @@ def query_one(table):
 def query_all(table):
     return db.session.execute(db.select(table)).scalars().all()
 
+def query_paginated(table,page):
+    return db.paginate(db.select(table),per_page=1,page=page)
+
 
 from flask_blog import routes

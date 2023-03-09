@@ -2,7 +2,7 @@ import secrets
 import os
 from PIL import Image
 from flask import render_template, redirect, url_for, flash, request, abort
-from flask_blog import app, bcrypt, db, query_one_filtered, query_all_filtered
+from flask_blog import app, bcrypt, db, query_one_filtered, query_all_filtered,query_paginated
 from flask_blog.models import User, Post
 from flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flask_login import login_user, current_user, logout_user, login_required
@@ -11,7 +11,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = query_all_filtered(Post)
+    page=request.args.get('page',1,type=int)
+    posts = query_paginated(Post,page)
     return render_template("home.html", posts=posts)
 
 

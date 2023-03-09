@@ -10,7 +10,7 @@
             <small class="text-slate-500">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             <!-- <hr /> -->
         </div>
-        <h2><a class="font-medium text-3xl" href="#">{{ post.title }}</a></h2>
+        <h2><a class="font-medium text-3xl hover:text-sky-500" href="{{url_for('post',post_id=post.id)}}">{{ post.title }}</a></h2>
         <p class="article-content">{{ post.content }}</p>
     </div>
 </article>

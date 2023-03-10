@@ -1,0 +1,45 @@
+{%extends "base.html"%}
+{%block content%}
+<div>
+    <form method="POST" action="">
+        {{form.hidden_tag()}}
+        <fieldset>
+            <legend class="text-lg text-bold">Reset Password</legend>
+
+            <div>
+                {{form.password.label(class="text-sm")}}
+                {%if form.password.errors%}
+                {{form.password(class="w-full border-rose-600 border-2 h-8 rounded" )}}
+                <div class="text-rose-600 text-sm">
+                    {% for error in form.password.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.password(class="w-full border h-8 rounded")}}
+                {%endif%}
+            </div>
+
+            <div>
+                {{form.confirm_password.label(class="text-sm")}}
+                {%if form.confirm_password.errors%}
+                {{form.confirm_password(class="w-full border-rose-600 border-2 h-8 rounded" )}}
+                <div class="text-rose-600 text-sm">
+                    {% for error in form.confirm_password.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.confirm_password(class="w-full border h-8 rounded")}}
+                {%endif%}
+            </div>
+            
+        </fieldset>
+        <div>
+            {{form.submit(class='rounded-full bg-sky-700 text-base md:text-sm text-white hover:cursor-pointer p-auto
+            py-2 w-1/5 mt-2')}}
+        </div>
+
+    </form>
+</div>
+{%endblock content%}

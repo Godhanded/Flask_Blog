@@ -2,17 +2,33 @@ import secrets
 import os
 from PIL import Image
 from flask import render_template, redirect, url_for, flash, request, abort
-from flask_blog import app, bcrypt, db, query_one_filtered, query_paginate_filtered,query_paginated
+from flask_blog import (
+    app,
+    bcrypt,
+    db,
+    mail,
+    query_one_filtered,
+    query_paginate_filtered,
+    query_paginated,
+)
 from flask_blog.models import User, Post
-from flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
+from flask_blog.forms import (
+    RegistrationForm,
+    LoginForm,
+    UpdateAccountForm,
+    PostForm,
+    RequestResetForm,
+    ResetPasswordForm,
+)
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_mail import Message
 
 
 @app.route("/")
 @app.route("/home")
 def home():
-    page=request.args.get('page',1,type=int)
-    posts = query_paginated(Post,page)
+    page = request.args.get("page", 1, type=int)
+    posts = query_paginated(Post, page)
     return render_template("home.html", posts=posts)
 
 
@@ -164,9 +180,64 @@ def delete_post(post_id):
 
 @app.route("/user/<string:username>")
 def user_posts(username):
-    page=request.args.get('page',1,type=int)
-    user=query_one_filtered(User,username=username)
+    page = request.args.get("page", 1, type=int)
+    user = query_one_filtered(User, username=username)
     if not user:
         abort(404)
-    posts = query_paginate_filtered(Post,page,author=user)
-    return render_template("user_posts.html", posts=posts,title=username,user=user)
+    posts = query_paginate_filtered(Post, page, author=user)
+    return render_template("user_posts.html", posts=posts, title=username, user=user)
+
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message(
+        "Password Reset Request", sender="noreply@demo.com", recipients=[user.email]
+    )
+    msg.body = f"""To reset your password, visit the following link <h1>Hey there</h1>
+{url_for('reset_token',token=token,_external=True)}
+
+<p style="color: bisque;">If you did not make this request then simply ignore this email, no changes will be made</p>
+"""
+    mail.send(msg)
+
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = query_one_filtered(User, email=form.email.data)
+        if not user:
+            flash(
+                f"An email with your password reset link will be sent if {form.email.data} exists",
+                "success",
+            )
+            return redirect(url_for("login"))
+        send_reset_email(user)
+        flash(
+            f"An email with your password reset link will be sent if {form.email.data} exists",
+            "success",
+        )
+        return redirect(url_for("login"))
+    return render_template("reset_request.html", form=form, title="Reset Passord")
+
+
+@app.route("/reset_password/<string:token>", methods=["GET", "POST"])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    user = User.verify_reset_token(token)
+    if not user:
+        flash("Invalid or Expired Token", "fail")
+        return redirect(url_for("reset_request"))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
+            "utf-8"
+        )
+        user.password = hashed_password
+        user.update()
+        flash(f"Password has been updated. Login Here!", "success")
+        return redirect(url_for("login"))
+    return render_template("reset_token.html", form=form, title="Rest Passord")

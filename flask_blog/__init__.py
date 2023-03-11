@@ -1,36 +1,21 @@
-import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-from dotenv import load_dotenv
+from flask_blog.config import Config
 
-load_dotenv('.env')
 
-app = Flask(__name__)
+db = SQLAlchemy()
 
-app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
+bcrypt = Bcrypt()
 
-db = SQLAlchemy(app)
-
-bcrypt = Bcrypt(app)
-
-login_manager = LoginManager(app)
-login_manager.login_view = "login"
+login_manager = LoginManager()
+login_manager.login_view = "users.login"
 login_manager.login_message_category = "bg-sky-400 italic"
 
-mail_settings = {
-    "MAIL_SERVER": "smtp.gmail.com",
-    "MAIL_PORT": 587,
-    "MAIL_USE_TLS": True,
-    "MAIL_USE_SSL": False,
-    "MAIL_USERNAME": os.environ.get('USER_NAME'),
-    "MAIL_PASSWORD": os.environ.get('PASS'),
-}
-app.config.update(mail_settings)
-mail = Mail(app)
+
+mail = Mail()
 
 
 def query_one_filtered(table, **kwargs):
@@ -63,4 +48,21 @@ def query_paginate_filtered(table, page, **kwargs):
     )
 
 
-from flask_blog import routes
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    db.init_app(app)
+    bcrypt.init_app(app)
+    mail.init_app(app)
+    login_manager.init_app(app)
+
+    from flask_blog.users.routes import users
+    from flask_blog.posts.routes import posts
+    from flask_blog.main.routes import main
+
+    app.register_blueprint(users)
+    app.register_blueprint(posts)
+    app.register_blueprint(main)
+
+    return app

@@ -1,4 +1,4 @@
-from flask_blog import db, login_manager, query_all_filtered, query_one_filtered
+from flask_blog import db, login_manager, query_one_filtered
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
 from flask_login import UserMixin
@@ -58,6 +58,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    comments = db.Relationship("Comment", backref="post", lazy=True)
 
     def __init__(self, title, content, author):
         self.title = title
@@ -66,6 +67,32 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id= db.column(db.Integer, db.ForeignKey("post.id"),nullable=False)
+
+    def __init__(self, comment, user,post_id):
+        self.user = user
+        self.comment = comment
+        self.post_id = post_id
+
+    def __repr__(self):
+        return f"Comment('{self.user_id}','{self.comment}')"
 
     def insert(self):
         db.session.add(self)

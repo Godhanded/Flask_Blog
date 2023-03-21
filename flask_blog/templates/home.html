@@ -2,30 +2,42 @@
 
 {% for post in posts.items %}
 <article class=" rounded-md media content-section shadow-md p-2 flex flex-row bg-white">
-    <img class="rounded-full h-[3.5rem] w-[3.5rem]" src="{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
+    <img class="rounded-full h-[3.5rem] w-[3.5rem]"
+        src="{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
     <div class="pl-2 ">
         <div class="border-b-2 w-[20rem]">
-            <a class="mr-2 text-sky-500" href="{{url_for('users.user_posts',username=post.author.username)}}">{{ post.author.username }}</a>
+            <a class="mr-2 text-sky-500" href="{{url_for('users.user_posts',username=post.author.username)}}">{{
+                post.author.username }}</a>
             <small class="text-slate-500">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             <!-- <hr /> -->
         </div>
-        <h2><a class="font-medium text-3xl hover:text-sky-500" href="{{url_for('posts.post',post_id=post.id)}}">{{ post.title }}</a></h2>
-        <p class="article-content">{{ post.content }}</p>
+        <h2><a class="font-medium text-3xl hover:text-sky-500" href="{{url_for('posts.post',post_id=post.id)}}">{{
+                post.title }}</a></h2>
+        <section class="flex flex-row justify-between">
+            <p class="article-content">{{ post.content }}</p>
+            <small class="flex flex-row justify-end mr-auto w-2 "><svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                </svg><small>{{post.comments|count}}</small></small>
+        </section>
     </div>
 </article>
 {% endfor %}
 <section class="flex flex-wrap gap-1">
-{%for page_num in posts.iter_pages(left_edge=1,right_edge=1, left_current=1,right_current=2)%}
+    {%for page_num in posts.iter_pages(left_edge=1,right_edge=1, left_current=1,right_current=2)%}
     {%if page_num%}
-        {%if posts.page==page_num%}
-        <a class=" text-sm border-white border p-2 inline bg-sky-300 text-white" href="{{url_for('main.home',page=page_num)}}">{{page_num}}</a>
-        {%else%}
-        <a class=" text-sm border-sky-300 border text-sky-400 p-2 inline hover:bg-sky-300 hover:text-white" href="{{url_for('main.home',page=page_num)}}">{{page_num}}</a>
-        {%endif%}
+    {%if posts.page==page_num%}
+    <a class=" text-sm border-white border p-2 inline bg-sky-300 text-white"
+        href="{{url_for('main.home',page=page_num)}}">{{page_num}}</a>
     {%else%}
-        ...
+    <a class=" text-sm border-sky-300 border text-sky-400 p-2 inline hover:bg-sky-300 hover:text-white"
+        href="{{url_for('main.home',page=page_num)}}">{{page_num}}</a>
     {%endif%}
-{%endfor%}
+    {%else%}
+    ...
+    {%endif%}
+    {%endfor%}
 
 </section>
 {%endblock content%}

@@ -1,9 +1,7 @@
 from flask import Blueprint
 from flask import render_template, request
-from flask_blog import (
-    query_paginated,
-)
-from flask_blog.models import Post
+from flask_blog import query_paginated, query_all_filtered
+from flask_blog.models import Post, Comment
 
 
 main = Blueprint("main", __name__)

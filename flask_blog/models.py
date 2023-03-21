@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
     posts = db.Relationship("Post", backref="author", lazy=True)
-    comments=db.Relationship('Comment',backref='user',lazy=True)
+    comments = db.Relationship("Comment", backref="user", lazy=True)
 
     def __init__(self, username, email, password, image_file="default.jpg"):
         self.username = username

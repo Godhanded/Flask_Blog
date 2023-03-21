@@ -1,10 +1,10 @@
 from flask import render_template, redirect, url_for, flash, request, abort, Blueprint
 from flask_blog import (
-    query_one_filtered,
+    query_one_filtered,query_all_filtered
 )
-from flask_blog.models import Post
+from flask_blog.models import Post,Comment
 from flask_blog.posts.forms import (
-    PostForm,
+    PostForm,CommentForm
 )
 from flask_login import current_user, login_required
 
@@ -31,10 +31,12 @@ def new_post():
 @posts.route("/post/<int:post_id>")
 @login_required
 def post(post_id):
+    form=CommentForm()
     post = query_one_filtered(Post, id=post_id)
     if not post:
         abort(404)
-    return render_template("post.html", title=post.title, post=post)
+    comments=query_all_filtered(Comment,post_id=post.id)
+    return render_template("post.html", title=post.title, post=post,form=form,comments=comments)
 
 
 @posts.route("/post/<int:post_id>/update", methods=["GET", "POST"])
@@ -71,3 +73,21 @@ def delete_post(post_id):
     post.delete()
     flash("Your post has been deleted", "success")
     return redirect(url_for("main.home"))
+
+@posts.route("/post/<int:post_id>/comment", methods=["POST"])
+@login_required
+def send_comment(post_id):
+    form=CommentForm(request.form)
+    if form.validate_on_submit():
+        comment=Comment(form.comment.data,current_user,post_id)
+        comment.insert()
+        return redirect(url_for('posts.post',post_id=post_id))
+
+@posts.route("/post/<int:comment_id>/delcomment", methods=["POST"])
+@login_required
+def delete_comment(comment_id):
+    comment=query_one_filtered(Comment,id=comment_id)
+    if not comment:
+        abort(404)
+    comment.delete()
+    return redirect(request.referrer)

@@ -79,14 +79,15 @@ class Post(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    post_id= db.column(db.Integer, db.ForeignKey("post.id"),nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
 
-    def __init__(self, comment, user,post_id):
+    def __init__(self, comment, user, post_id):
         self.user = user
         self.comment = comment
         self.post_id = post_id

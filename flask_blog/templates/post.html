@@ -115,14 +115,14 @@
 			<form action="{{url_for('posts.like_comment',comment_id=comment.id)}}" method="post">
 				{% if not like.user_id==current_user.id %}
 				<button type="submit" class="bg-red-300 text-white hover:cursor-pointer p-1
-			py-[0.1rem] px-3 w-full rounded-full text-sm ">Like<small>{{comment.likes|count}}</small></button>{%else%}<button
+			py-[0.1rem] px-2 w-full rounded-full text-sm ">Like  <small>{{comment.likes|count}}</small></button>{%else%}<button
 					type="submit"
-					class="bg-red-300 text-white hover:cursor-pointer p-1 px-3 py-[0.1rem] w-full rounded-full text-sm">
-					Unlike<small>{{comment.likes|count}}</small></button>
+					class="bg-red-300 text-white hover:cursor-pointer p-1 px-2 py-[0.1rem] w-full rounded-full text-sm">
+					Unlike  <small>{{comment.likes|count}}</small></button>
 				{%endif%}
 			</form>{%endfor%}{%else%}<form action="{{url_for('posts.like_comment',comment_id=comment.id)}}"
 				method="post"><button type="submit" class="bg-red-300 text-white hover:cursor-pointer p-1
-			py-[0.1rem] px-3 w-full rounded-full text-sm ">Like <small>{{comment.likes|count}}</small></button>
+			py-[0.1rem] px-2 w-full rounded-full text-sm ">Like <small>{{comment.likes|count}}</small></button>
 			</form>{%endif%}</section>
 		</div>
 	</article>

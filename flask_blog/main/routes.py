@@ -6,9 +6,8 @@ from flask_blog.models import Post, Comment
 
 main = Blueprint("main", __name__)
 
-
-@main.route("/")
 @main.route("/home")
+@main.route("/")
 def home():
     page = request.args.get("page", 1, type=int)
     posts = query_paginated(Post, page)

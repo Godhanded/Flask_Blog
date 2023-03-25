@@ -1,30 +1,31 @@
 {% extends "base.html" %} {% block content%}
 
 {% for post in posts.items %}
-<article class=" rounded-md media content-section shadow-md p-2 flex flex-row bg-white">
+<article class=" rounded-md media content-section shadow-md p-2 flex flex-row bg-white w-full">
     <img class="rounded-full h-[3.5rem] w-[3.5rem]"
         src="{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
-    <div class="pl-2 ">
-        <div class="border-b-2 w-[20rem]">
+    <div class="pl-2 w-full">
+        <div class="border-b-2  flex flex-row w-full justify-between">
+            <section>
             <a class="mr-2 text-sky-500" href="{{url_for('users.user_posts',username=post.author.username)}}">{{
                 post.author.username }}</a>
-            <small class="text-slate-500">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            <small class="text-slate-500">{{ post.date_posted.strftime('%Y-%m-%d') }}</small></section>
             <!-- <hr /> -->
             {%if post.likes%}
 
             {%for like in post.likes%}
-            <form action="{{url_for('posts.like_post',post_id=post.id)}}" method="post">
+            <form action="{{url_for('posts.like_post',post_id=post.id)}}" method="post" >
                 {% if not like.user_id==current_user.id %}
 
                 <button type="submit" class="bg-red-300 text-white hover:cursor-pointer p-1
-			py-[0.1rem] w-1/5 rounded-full text-sm ">Like<small>{{post.likes|count}}</small></button>{%else%}<button
+			py-[0.1rem] px-2 w-full rounded-full text-sm ">Like  <small>{{post.likes|count}}</small></button>{%else%}<button
                     type="submit"
-                    class="bg-red-300 text-white hover:cursor-pointer p-1 py-[0.1rem] w-1/5 rounded-full text-sm">
-                    Unlike<small>{{post.likes|count}}</small></button>
+                    class="bg-red-300 text-white hover:cursor-pointer p-1 py-[0.1rem] px-2 w-full rounded-full text-sm">
+                    Unlike  <small>{{post.likes|count}}</small></button>
                 {%endif%}
-            </form>{%endfor%}{%else%}<form action="{{url_for('posts.like_post',post_id=post.id)}}" method="post"><button
+            </form>{%endfor%}{%else%}<form action="{{url_for('posts.like_post',post_id=post.id)}}" method="post" class=""><button
                     type="submit" class="bg-red-300 text-white hover:cursor-pointer p-1
-			py-[0.1rem] w-1/5 rounded-full text-sm ">Like <small>{{post.likes|count}}</small></button>
+			py-[0.1rem] px-2 w-full rounded-full text-sm ">Like <small>{{post.likes|count}}</small></button>
             </form>{%endif%}
         </div>
         <h2><a class="font-medium text-3xl hover:text-sky-500" href="{{url_for('posts.post',post_id=post.id)}}">{{

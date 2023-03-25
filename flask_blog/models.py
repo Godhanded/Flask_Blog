@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     posts = db.Relationship("Post", backref="author", lazy=True)
     comments = db.Relationship("Comment", backref="user", lazy=True)
+    likes= db.Relationship("Like", backref="user",lazy=True)
 
     def __init__(self, username, email, password, image_file="default.jpg"):
         self.username = username
@@ -60,6 +61,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     comments = db.Relationship("Comment", backref="post", lazy=True)
+    likes= db.Relationship("Like", backref="Post",lazy=True)
 
     def __init__(self, title, content, author):
         self.title = title
@@ -87,6 +89,7 @@ class Comment(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    likes= db.Relationship("Like", backref="comment",lazy=True)
 
     def __init__(self, comment, user, post_id):
         self.user = user
@@ -106,3 +109,31 @@ class Comment(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey("comment.id"), nullable=True)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True)
+
+    def __init__(self, comment_id, user, post_id):
+        self.user = user
+        self.comment_id = comment_id
+        self.post_id = post_id
+
+    def __repr__(self):
+        return f"Like('{self.user_id}','{self.post_id}','{self.comment_id}')"
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+

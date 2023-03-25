@@ -15,10 +15,10 @@
 				py-1 w-1/5 rounded-full mr-2">Update</a>
 			<button type="button" class="bg-red-300 text-white hover:cursor-pointer p-1
                     py-[0.1rem] w-1/5 rounded-full text-sm"
-				onclick="(function(){document.getElementById('my-modal').style.display = 'block'})()">Delete</button>
+				onclick="(function(){document.getElementById('my-modal').style.display = 'block'})()"> Delete</button>
 
-			{%endif%}
-			<!-- <hr /> -->
+			{% endif %}
+
 		</div>
 		<h2 class="font-medium text-3xl">{{ post.title }}</h2>
 		<p class="article-content">{{ post.content }}</p>
@@ -108,9 +108,26 @@
 				{%endif%}
 			</div>
 			<p class="article-content italic">{{ comment.comment }}</p>
+			{%if comment.likes%}
+
+			{%for like in comment.likes%}
+			<form action="{{url_for('posts.like_comment',comment_id=comment.id)}}" method="post">
+				{% if not like.user_id==current_user.id %}
+				<button type="submit" class="bg-red-300 text-white hover:cursor-pointer p-1
+			py-[0.1rem] w-1/5 rounded-full text-sm ">Like<small>{{comment.likes|count}}</small></button>{%else%}<button
+					type="submit"
+					class="bg-red-300 text-white hover:cursor-pointer p-1 py-[0.1rem] w-1/5 rounded-full text-sm">
+					Unlike<small>{{comment.likes|count}}</small></button>
+				{%endif%}
+			</form>{%endfor%}{%else%}<form action="{{url_for('posts.like_comment',comment_id=comment.id)}}"
+				method="post"><button type="submit" class="bg-red-300 text-white hover:cursor-pointer p-1
+			py-[0.1rem] w-1/5 rounded-full text-sm ">Like <small>{{comment.likes|count}}</small></button>
+			</form>{%endif%}
 		</div>
 	</article>
 	{%endfor%}
 </div>
 {%endif%}
+
+
 {%endblock content%}

@@ -602,6 +602,14 @@ video {
   margin-top: 1rem;
 }
 
+.mr-20 {
+  margin-right: 5rem;
+}
+
+.ml-6 {
+  margin-left: 1.5rem;
+}
+
 .block {
   display: block;
 }

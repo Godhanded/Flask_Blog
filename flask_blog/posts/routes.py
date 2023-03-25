@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, abort, Blueprint
-from flask_blog import query_one_filtered, query_all_filtered
-from flask_blog.models import Post, Comment
+from flask_blog import query_one_filtered, query_all_filtered,db
+from flask_blog.models import Post, Comment,Like
 from flask_blog.posts.forms import PostForm, CommentForm
 from flask_login import current_user, login_required
 
@@ -35,6 +35,28 @@ def post(post_id):
     return render_template(
         "post.html", title=post.title, post=post, form=form, comments=comments
     )
+
+@posts.route("/post/<int:post_id>/like",methods=["POST"])
+@login_required
+def like_post(post_id):
+    like = db.session.execute(db.select(Like).filter_by(post_id=post_id).filter_by(user=current_user)).scalar_one_or_none()
+    if not like:
+        like = Like(None,current_user,post_id)
+        like.insert()
+    else:
+        like.delete()
+    return redirect(request.referrer)
+
+@posts.route("/post/comment/<int:comment_id>/like",methods=["POST"])
+@login_required
+def like_comment(comment_id):
+    like = db.session.execute(db.select(Like).filter_by(comment_id=comment_id).filter_by(user=current_user)).scalar_one_or_none()
+    if not like:
+        like = Like(comment_id,current_user,None)
+        like.insert() 
+    else:
+        like.delete()
+    return redirect(request.referrer)
 
 
 @posts.route("/post/<int:post_id>/update", methods=["GET", "POST"])
